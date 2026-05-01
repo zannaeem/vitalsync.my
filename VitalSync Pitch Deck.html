@@ -248,8 +248,8 @@ img { display: block; }
 </head>
 <body>
 
-<div id="progress" style="width:8.33%"></div>
-<div id="counter">01 / 12</div>
+<div id="progress" style="width:7.69%"></div>
+<div id="counter">01 / 13</div>
 <div class="nav-btn gone" id="nav-prev" onclick="go(-1)">
   <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 </div>
@@ -668,8 +668,48 @@ img { display: block; }
   </div>
 </div>
 
-<!-- ═══ S12 · FUNDING ASK ═══ -->
+<!-- ═══ S12 · REGULATORY PATH ═══ -->
 <div class="slide" id="s12">
+  <div class="grid-bg" style="opacity:.28"></div>
+  <div class="inner" style="max-width:720px;width:100%;margin:auto;display:flex;flex-direction:column;gap:40px;">
+    <div style="display:inline-flex;align-items:center;gap:10px;background:var(--red);border-radius:100px;padding:10px 22px;width:fit-content;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      <span style="font-family:var(--font);font-weight:600;font-size:15px;color:#fff;letter-spacing:.02em;">Regulatory Path</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px;">
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;opacity:.9"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      <div>
+        <div style="font-family:var(--serif);font-style:italic;font-size:clamp(32px,5vw,52px);color:var(--fg);line-height:1.05;">SaMD Class C &mdash; MDA Malaysia</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div style="display:flex;gap:18px;align-items:flex-start;padding:24px 28px;background:var(--bg2);border:1px solid var(--bord);border-radius:16px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:500;color:#fff;flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:18px;font-weight:600;color:var(--fg);margin-bottom:4px;">MDA AI Regulatory Sandbox (2025)</div>
+          <div style="font-size:14px;color:var(--fg-dim);">Clinical validation in controlled environment</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:flex-start;padding:24px 28px;background:var(--bg2);border:1px solid var(--bord);border-radius:16px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:500;color:#fff;flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:18px;font-weight:600;color:var(--fg);margin-bottom:4px;">ISO 13485 QMS Certification</div>
+          <div style="font-size:14px;color:var(--fg-dim);">Quality management system &mdash; budgeted RM 30K</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:18px;align-items:flex-start;padding:24px 28px;background:var(--bg2);border:1px solid var(--bord);border-radius:16px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:500;color:#fff;flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:18px;font-weight:600;color:var(--fg);margin-bottom:4px;">Full Conformity Assessment</div>
+          <div style="font-size:14px;color:var(--fg-dim);">CAB review &rarr; MDA registration</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S13 · FUNDING ASK ═══ -->
+<div class="slide" id="s13">
   <div class="grid-bg" style="opacity:.22"></div>
   <div class="inner">
     <div class="ask-eyebrow">Pre-seed Round</div>
@@ -715,7 +755,7 @@ img { display: block; }
 
 <script>
 (function () {
-  const TOTAL = 12;
+  const TOTAL = 13;
   let cur = 1;
   const slides  = document.querySelectorAll('.slide');
   const counter = document.getElementById('counter');
