@@ -8,9 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ─────────────────────────────────────────────────
-   DESIGN TOKENS  (match vitalsync.my exactly)
-──────────────────────────────────────────────── */
 :root {
   --bg:       #0D0B09;
   --bg2:      #131110;
@@ -23,54 +20,38 @@
   --fg-faint: #4A4440;
   --bord:     rgba(255,255,255,0.07);
   --bord-mid: rgba(255,255,255,0.13);
-  --font:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font:     'Inter', -apple-system, sans-serif;
   --serif:    'Instrument Serif', Georgia, serif;
   --mono:     'DM Mono', ui-monospace, monospace;
 }
-
-/* ─────────────────────────────────────────────────
-   RESET
-──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
   width: 100%; height: 100%; overflow: hidden;
   background: var(--bg); color: var(--fg);
   font-family: var(--font);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 img { display: block; }
 
-/* ─────────────────────────────────────────────────
-   PROGRESS BAR
-──────────────────────────────────────────────── */
+/* ── CHROME ── */
 #progress {
   position: fixed; top: 0; left: 0;
   height: 2px; background: var(--red);
   z-index: 900; transition: width .45s cubic-bezier(.4,0,.2,1);
 }
-
-/* ─────────────────────────────────────────────────
-   SLIDE COUNTER
-──────────────────────────────────────────────── */
 #counter {
   position: fixed; bottom: 28px; right: 36px;
   font-family: var(--mono); font-size: 10px;
   letter-spacing: .15em; color: var(--fg-faint);
   z-index: 900; user-select: none;
 }
-
-/* ─────────────────────────────────────────────────
-   NAV ARROWS
-──────────────────────────────────────────────── */
 .nav-btn {
-  position: fixed; bottom: 22px;
-  z-index: 900; width: 34px; height: 34px;
-  border-radius: 50%; border: 1px solid var(--bord);
-  background: rgba(13,11,9,.8); backdrop-filter: blur(10px);
+  position: fixed; bottom: 22px; z-index: 900;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--bord); background: rgba(13,11,9,.8);
+  backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: border-color .2s, opacity .2s;
-  opacity: .55;
+  cursor: pointer; transition: border-color .2s, opacity .2s; opacity: .55;
 }
 .nav-btn:hover { border-color: var(--bord-mid); opacity: 1; }
 .nav-btn svg { width: 15px; height: 15px; stroke: var(--fg-dim); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
@@ -78,11 +59,8 @@ img { display: block; }
 #nav-next { left: calc(50% + 14px); }
 .nav-btn.gone { opacity: 0; pointer-events: none; }
 
-/* ─────────────────────────────────────────────────
-   SLIDE ENGINE
-──────────────────────────────────────────────── */
+/* ── SLIDE ENGINE ── */
 #deck { width: 100%; height: 100%; position: relative; }
-
 .slide {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
@@ -95,18 +73,12 @@ img { display: block; }
 .slide.active { opacity: 1; transform: translateY(0); pointer-events: all; }
 .slide.exit   { opacity: 0; transform: translateY(-18px); transition: opacity .25s, transform .25s; }
 
-/* ─────────────────────────────────────────────────
-   DOT GRID PATTERN
-──────────────────────────────────────────────── */
+/* ── SHARED ATOMS ── */
 .grid-bg {
   position: absolute; inset: 0; pointer-events: none; z-index: 0;
   background-image: radial-gradient(circle, rgba(255,255,255,.042) 1px, transparent 1px);
   background-size: 36px 36px;
 }
-
-/* ─────────────────────────────────────────────────
-   PULSING RINGS
-──────────────────────────────────────────────── */
 .rings { position: absolute; top: 50%; left: 50%; pointer-events: none; z-index: 0; }
 .ring {
   position: absolute; width: 520px; height: 520px;
@@ -120,10 +92,6 @@ img { display: block; }
   0%   { opacity: .85; transform: translate(-50%,-50%) scale(.1); }
   100% { opacity: 0;   transform: translate(-50%,-50%) scale(1); }
 }
-
-/* ─────────────────────────────────────────────────
-   SHARED ATOMS
-──────────────────────────────────────────────── */
 .label-mono {
   font-family: var(--mono); font-size: 9px;
   letter-spacing: .2em; text-transform: uppercase; color: var(--fg-faint);
@@ -137,10 +105,6 @@ img { display: block; }
   background: var(--bg3); border: 1px solid var(--bord);
   border-radius: 18px; padding: 26px 24px;
 }
-.card-accent {
-  background: rgba(194,53,26,.05); border: 1px solid rgba(194,53,26,.28);
-  border-radius: 18px; padding: 26px 24px;
-}
 .pill {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 8px 18px; border-radius: 100px;
@@ -148,10 +112,7 @@ img { display: block; }
   color: var(--fg-dim); font-weight: 500;
   background: rgba(255,255,255,.03);
 }
-.pill-live {
-  border-color: rgba(34,197,94,.35);
-  background: rgba(34,197,94,.06); color: #4ade80;
-}
+.pill-live { border-color: rgba(34,197,94,.35); background: rgba(34,197,94,.06); color: #4ade80; }
 .dot-live {
   width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
   animation: dotpulse 2s ease-in-out infinite;
@@ -161,305 +122,134 @@ img { display: block; }
   50%       { opacity: .7; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
 }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 1 — TITLE
-══════════════════════════════════════════════════ */
+/* ══ S1 TITLE ══ */
 #s1 { background: var(--bg); }
-#s1 .inner {
-  position: relative; z-index: 1;
-  text-align: center; display: flex;
-  flex-direction: column; align-items: center; gap: 18px;
-}
-#s1 .logo-row {
-  display: flex; align-items: center; gap: 16px;
-}
+#s1 .inner { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+#s1 .logo-row { display: flex; align-items: center; gap: 16px; }
 #s1 .lmark svg { width: 56px; height: 56px; }
-#s1 .ltext {
-  font-size: clamp(44px, 6vw, 68px); font-weight: 800;
-  letter-spacing: -.04em; color: var(--fg);
-}
-#s1 .tagline {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(18px, 2.2vw, 26px);
-  color: var(--fg-dim); letter-spacing: -.01em;
-}
+#s1 .ltext { font-size: clamp(44px,6vw,68px); font-weight: 800; letter-spacing: -.04em; color: var(--fg); }
+#s1 .tagline { font-family: var(--serif); font-style: italic; font-size: clamp(18px,2.2vw,26px); color: var(--fg-dim); }
 #s1 .rule { width: 44px; height: 1px; background: var(--bord-mid); }
-#s1 .foot {
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: .22em; text-transform: uppercase; color: var(--fg-faint);
-}
+#s1 .foot { font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--fg-faint); }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 2 — PROBLEM
-══════════════════════════════════════════════════ */
+/* ══ S2 PROBLEM ══ */
 #s2 { background: var(--bg); }
-#s2 .inner {
-  position: relative; z-index: 1;
-  text-align: center; display: flex;
-  flex-direction: column; align-items: center;
-}
-#s2 .bignum {
-  font-size: clamp(110px, 19vw, 250px); font-weight: 300;
-  line-height: .88; letter-spacing: -.07em;
-  color: var(--red); font-feature-settings: "ss01";
-  position: relative; z-index: 1;
-}
-#s2 .bignum sup {
-  font-size: .22em; color: var(--fg-dim);
-  font-weight: 400; vertical-align: super; letter-spacing: 0;
-}
-#s2 .statlabel {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(20px, 2.6vw, 34px);
-  color: var(--fg-dim); max-width: 26ch;
-  margin-top: 32px; line-height: 1.35; letter-spacing: -.01em;
-}
-#s2 .statsub {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(15px, 1.8vw, 22px);
-  color: var(--fg-faint); margin-top: 8px; letter-spacing: -.01em;
-}
-#s2 .attr {
-  font-family: var(--mono); font-size: 9.5px;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--fg-faint); margin-top: 44px;
-}
+#s2 .inner { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; }
+#s2 .bignum { font-size: clamp(110px,19vw,250px); font-weight: 300; line-height: .88; letter-spacing: -.07em; color: var(--red); position: relative; z-index: 1; }
+#s2 .bignum sup { font-size: .22em; color: var(--fg-dim); font-weight: 400; vertical-align: super; letter-spacing: 0; }
+#s2 .statlabel { font-family: var(--serif); font-style: italic; font-size: clamp(20px,2.6vw,34px); color: var(--fg-dim); max-width: 26ch; margin-top: 32px; line-height: 1.35; }
+#s2 .statsub { font-family: var(--serif); font-style: italic; font-size: clamp(15px,1.8vw,22px); color: var(--fg-faint); margin-top: 8px; }
+#s2 .attr { font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-faint); margin-top: 44px; }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 3 — DEMO
-══════════════════════════════════════════════════ */
-#s3 {
-  background: var(--bg);
-  align-items: flex-start;
-  padding: 52px 80px 68px;
-}
-#s3 .headline {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(32px, 4.5vw, 58px);
-  color: var(--fg); letter-spacing: -.02em;
-  margin-bottom: 22px; position: relative; z-index: 1;
-}
-#s3 .dash-frame {
-  width: 100%; flex: 1;
-  border-radius: 14px; overflow: hidden;
-  border: 1px solid var(--bord-mid);
-  background: var(--bg2);
-  position: relative; z-index: 1;
-  min-height: 0;
-}
-#s3 .dash-frame img {
-  width: 100%; height: 100%; object-fit: cover;
-}
-#s3 .pills-row {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  margin-top: 18px; position: relative; z-index: 1;
-}
+/* ══ S3 DEMO ══ */
+#s3 { background: var(--bg); align-items: flex-start; padding: 52px 80px 68px; }
+#s3 .headline { font-family: var(--serif); font-style: italic; font-size: clamp(32px,4.5vw,58px); color: var(--fg); letter-spacing: -.02em; margin-bottom: 22px; position: relative; z-index: 1; }
+#s3 .dash-frame { width: 100%; flex: 1; border-radius: 14px; overflow: hidden; border: 1px solid var(--bord-mid); background: var(--bg2); position: relative; z-index: 1; min-height: 0; }
+#s3 .dash-frame img { width: 100%; height: 100%; object-fit: cover; }
+#s3 .pills-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; position: relative; z-index: 1; }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 4 — TRACTION
-══════════════════════════════════════════════════ */
+/* ══ S4 TRACTION ══ */
 #s4 { background: var(--bg); }
-#s4 .inner {
-  position: relative; z-index: 1;
-  text-align: center; width: 100%;
-}
-#s4 .place {
-  font-size: clamp(72px, 14vw, 160px); font-weight: 800;
-  letter-spacing: -.05em; line-height: .9; color: var(--red);
-  margin-bottom: 6px;
-}
-#s4 .hackname {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(20px, 2.8vw, 38px);
-  color: var(--fg-dim); letter-spacing: -.01em;
-  margin-bottom: 44px;
-}
-#s4 .trac-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 14px; max-width: 860px; margin: 0 auto;
-}
-#s4 .tc {
-  background: var(--bg3); border: 1px solid var(--bord);
-  border-radius: 16px; padding: 22px 20px; text-align: left;
-}
+#s4 .inner { position: relative; z-index: 1; text-align: center; width: 100%; }
+#s4 .place { font-size: clamp(72px,14vw,160px); font-weight: 800; letter-spacing: -.05em; line-height: .9; color: var(--red); margin-bottom: 6px; }
+#s4 .hackname { font-family: var(--serif); font-style: italic; font-size: clamp(20px,2.8vw,38px); color: var(--fg-dim); margin-bottom: 44px; }
+#s4 .trac-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; max-width: 860px; margin: 0 auto; }
+#s4 .tc { background: var(--bg3); border: 1px solid var(--bord); border-radius: 16px; padding: 22px 20px; text-align: left; }
 #s4 .tc-tag { margin-bottom: 9px; }
 #s4 .tc-val { font-size: 14px; font-weight: 500; color: var(--fg); line-height: 1.45; }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 5 — SOLUTION
-══════════════════════════════════════════════════ */
+/* ══ S5 MODEL ══ */
 #s5 { background: var(--bg); }
-#s5 .inner {
-  position: relative; z-index: 1; width: 100%;
-  display: grid; grid-template-columns: 1fr 1.1fr;
-  gap: 22px; max-width: 1080px;
-}
-#s5 .col-label { margin-bottom: 16px; }
-#s5 .stats-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-}
-#s5 .sc {
-  background: var(--bg3); border: 1px solid var(--bord);
-  border-radius: 15px; padding: 20px 18px;
-}
-#s5 .sc-num {
-  font-size: clamp(28px, 4vw, 48px); font-weight: 300;
-  letter-spacing: -.04em; color: var(--red);
-  line-height: 1; margin-bottom: 7px;
-}
-#s5 .sc-lbl {
-  font-family: var(--mono); font-size: 9.5px;
-  letter-spacing: .11em; text-transform: uppercase;
-  color: var(--fg-faint); line-height: 1.45;
-}
-#s5 .table {
-  background: var(--bg3); border: 1px solid var(--bord);
-  border-radius: 16px; overflow: hidden;
-}
-#s5 .th {
-  display: grid; grid-template-columns: 1.1fr 1fr 1fr;
-  padding: 12px 18px; border-bottom: 1px solid var(--bord);
-  background: var(--bg2);
-}
-#s5 .th span {
-  font-family: var(--mono); font-size: 8.5px;
-  letter-spacing: .18em; text-transform: uppercase; color: var(--fg-faint);
-}
-#s5 .th span:last-child { color: var(--red); opacity: .7; }
-#s5 .tr {
-  display: grid; grid-template-columns: 1.1fr 1fr 1fr;
-  padding: 12px 18px; border-bottom: 1px solid var(--bord);
-  align-items: center;
-}
-#s5 .tr:last-child { border-bottom: none; }
-#s5 .tf { font-size: 12px; font-weight: 500; color: var(--fg-dim); }
-#s5 .te { font-size: 12px; color: var(--fg-faint); }
-#s5 .tv { font-size: 12px; font-weight: 600; color: var(--fg); }
+#s5 .inner { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0; }
+#s5 .model-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--red); opacity: .8; margin-bottom: 18px; }
+#s5 .model-name { font-family: var(--serif); font-style: italic; font-size: clamp(72px,12vw,148px); color: var(--fg); letter-spacing: -.03em; line-height: .92; }
+#s5 .model-sub { font-size: clamp(16px,2vw,24px); color: var(--fg-dim); margin-top: 24px; font-weight: 300; }
+#s5 .model-rule { width: 1px; height: 40px; background: var(--bord-mid); margin: 32px auto 0; }
+#s5 .model-pills { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 28px; }
+#s5 .model-attr { font-family: var(--mono); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--fg-faint); margin-top: 32px; }
+#s5 .tree-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: .04; z-index: 0; }
+#s5 .tree-wrap svg { width: min(70vw, 70vh); height: min(70vw, 70vh); }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 6 — MARKET
-══════════════════════════════════════════════════ */
+/* ══ S6 AUC ══ */
 #s6 { background: var(--bg); }
-#s6 .inner {
-  position: relative; z-index: 1;
-  width: 100%; max-width: 960px; text-align: center;
-}
-#s6 .slide-title {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(17px, 2.2vw, 27px);
-  color: var(--fg-dim); margin-bottom: 36px; letter-spacing: -.01em;
-}
-#s6 .mkt-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 14px; margin-bottom: 24px;
-}
-#s6 .mc {
-  background: var(--bg3); border: 1px solid var(--bord);
-  border-radius: 18px; padding: 26px 22px; text-align: left;
-}
-#s6 .mc.hl {
-  background: rgba(194,53,26,.05); border-color: rgba(194,53,26,.3);
-}
-#s6 .mc-tag { margin-bottom: 12px; }
-#s6 .mc-num {
-  font-size: clamp(34px, 5vw, 52px); font-weight: 300;
-  letter-spacing: -.04em; color: var(--fg); line-height: 1;
-  margin-bottom: 7px;
-}
-#s6 .mc.hl .mc-num { color: var(--red); }
-#s6 .mc-desc { font-size: 12.5px; color: var(--fg-dim); line-height: 1.45; }
-#s6 .beachhead {
-  background: var(--bg2); border: 1px solid var(--bord);
-  border-radius: 13px; padding: 16px 22px;
-  font-size: 13px; color: var(--fg-dim); line-height: 1.55;
-}
-#s6 .beachhead strong { color: var(--fg); font-weight: 600; }
+#s6 .inner { position: relative; z-index: 1; width: 100%; max-width: 1080px; display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: center; }
+#s6 .auc-left {}
+#s6 .auc-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 14px; }
+#s6 .auc-num { font-size: clamp(80px,12vw,148px); font-weight: 300; letter-spacing: -.06em; color: var(--red); line-height: .9; }
+#s6 .auc-label { font-family: var(--serif); font-style: italic; font-size: clamp(18px,2.2vw,28px); color: var(--fg-dim); margin-top: 18px; line-height: 1.35; }
+#s6 .auc-note { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--fg-faint); margin-top: 22px; line-height: 1.6; }
+#s6 .roc-wrap { background: var(--bg2); border: 1px solid var(--bord); border-radius: 18px; padding: 28px; }
+#s6 .roc-wrap svg { width: 100%; height: auto; display: block; }
 
-/* ══════════════════════════════════════════════════
-   SLIDE 7 — BUSINESS MODEL + ASK
-══════════════════════════════════════════════════ */
-#s7 {
-  background: var(--bg);
-  justify-content: flex-start;
-  padding: 44px 80px 52px;
-}
-#s7 .inner {
-  position: relative; z-index: 1;
-  width: 100%; display: flex;
-  flex-direction: column; gap: 16px; height: 100%;
-}
-#s7 .top { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-height: 0; }
+/* ══ S7 HARDWARE ══ */
+#s7 { background: var(--bg); }
+#s7 .inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 0; text-align: center; }
+#s7 .hw-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 28px; }
+#s7 .hw-frame { width: clamp(280px,38vw,460px); height: clamp(185px,25vw,305px); border-radius: 18px; border: 1px solid var(--bord-mid); overflow: hidden; background: var(--bg2); display: flex; align-items: center; justify-content: center; }
+#s7 .hw-frame img { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
+#s7 .hw-price { font-size: clamp(72px,13vw,160px); font-weight: 300; letter-spacing: -.06em; color: var(--red); line-height: .88; margin-top: 28px; }
+#s7 .hw-name { font-family: var(--serif); font-style: italic; font-size: clamp(18px,2.2vw,28px); color: var(--fg-dim); margin-top: 10px; }
+#s7 .hw-tagline { font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--fg-faint); margin-top: 20px; }
 
-#s7 .price-card {
-  background: var(--bg3); border: 1px solid var(--bord);
-  border-radius: 18px; padding: 28px 24px;
-  display: flex; flex-direction: column;
+/* ══ MAP SLIDES (S8, S9, S10) ══ */
+.map-slide { background: #080706; padding: 0; }
+.map-svg-wrap { position: absolute; inset: 0; z-index: 0; }
+.map-svg-wrap svg { width: 100%; height: 100%; }
+.map-card {
+  position: absolute; top: 56px; left: 64px; z-index: 10;
+  background: rgba(8,7,6,.82); backdrop-filter: blur(16px);
+  border: 1px solid var(--bord-mid); border-radius: 20px;
+  padding: 24px 28px; min-width: 220px;
 }
-#s7 .ask-card {
-  background: var(--bg3); border: 1px solid var(--bord);
-  border-radius: 18px; padding: 28px 24px;
-  display: flex; flex-direction: column;
-}
-#s7 .big-price {
-  font-size: clamp(38px, 5.5vw, 66px); font-weight: 300;
-  letter-spacing: -.05em; color: var(--red); line-height: 1;
-  margin-bottom: 3px;
-}
-#s7 .big-ask {
-  font-size: clamp(38px, 5.5vw, 66px); font-weight: 300;
-  letter-spacing: -.05em; color: var(--fg); line-height: 1;
-  margin-bottom: 3px;
-}
-#s7 .sub-mono {
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--fg-faint); margin-bottom: 18px;
-}
-#s7 .payback {
-  font-size: 13px; color: var(--fg-dim); line-height: 1.6;
-  margin-top: auto; padding-top: 14px;
-  border-top: 1px solid var(--bord);
-}
-#s7 .payback strong { color: var(--fg); }
-#s7 .use-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-top: auto; }
-#s7 .use-list li {
-  display: flex; align-items: flex-start; gap: 9px;
-  font-size: 12.5px; color: var(--fg-dim); line-height: 1.45;
-}
-#s7 .use-list li::before {
-  content: ''; width: 4px; height: 4px; border-radius: 50%;
-  background: var(--red); margin-top: 6px; flex-shrink: 0;
-}
+.map-card .mc-tag { font-family: var(--mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 10px; }
+.map-card .mc-num { font-size: clamp(48px,7vw,88px); font-weight: 300; letter-spacing: -.05em; color: var(--red); line-height: .9; }
+.map-card .mc-desc { font-size: 13px; color: var(--fg-dim); margin-top: 8px; line-height: 1.45; max-width: 24ch; }
+.map-card .mc-sub { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-faint); margin-top: 12px; line-height: 1.6; }
 
-#s7 .founders { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-#s7 .fc {
-  background: var(--bg2); border: 1px solid var(--bord);
-  border-radius: 13px; padding: 14px 18px;
-  display: flex; align-items: center; gap: 13px;
-}
-#s7 .fc img {
-  width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
-  border: 1px solid var(--bord-mid); background: var(--bg4); flex-shrink: 0;
-}
-#s7 .fc-name { font-size: 13.5px; font-weight: 600; color: var(--fg); }
-#s7 .fc-role {
-  font-family: var(--mono); font-size: 9px;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-top: 2px;
-}
-#s7 .fc-deg { font-size: 11.5px; color: var(--fg-faint); margin-top: 2px; }
+/* country fills */
+.land { fill: #1A1714; stroke: rgba(255,255,255,0.09); stroke-width: 0.6; stroke-linejoin: round; }
+.land-hl { fill: rgba(194,53,26,0.28); stroke: rgba(194,53,26,0.65); stroke-width: 0.8; stroke-linejoin: round; }
+.land-dim { fill: #131110; stroke: rgba(255,255,255,0.06); stroke-width: 0.5; stroke-linejoin: round; }
+.gratline { stroke: rgba(255,255,255,0.035); stroke-width: 0.5; fill: none; stroke-dasharray: 3 4; }
+.city-dot { fill: var(--red); }
+.city-label { fill: rgba(240,234,227,0.55); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; }
 
-#s7 .closing {
-  font-family: var(--serif); font-style: italic;
-  font-size: clamp(15px, 1.9vw, 21px);
-  color: var(--fg-dim); text-align: center; letter-spacing: -.01em;
-}
+/* ══ S11 BUSINESS MODEL ══ */
+#s11 { background: var(--bg); }
+#s11 .inner { position: relative; z-index: 1; width: 100%; max-width: 960px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0; }
+#s11 .bm-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 20px; }
+#s11 .bm-price { font-size: clamp(80px,13vw,160px); font-weight: 300; letter-spacing: -.06em; color: var(--red); line-height: .88; }
+#s11 .bm-period { font-family: var(--mono); font-size: clamp(11px,1.4vw,16px); letter-spacing: .22em; text-transform: uppercase; color: var(--fg-faint); margin-top: 12px; }
+#s11 .bm-rule { width: 48px; height: 1px; background: var(--bord-mid); margin: 32px auto; }
+#s11 .bm-quote { font-family: var(--serif); font-style: italic; font-size: clamp(20px,2.6vw,34px); color: var(--fg-dim); max-width: 34ch; line-height: 1.38; }
+#s11 .bm-compare { display: flex; align-items: center; gap: 16px; margin-top: 36px; flex-wrap: wrap; justify-content: center; }
+#s11 .bm-vs { font-family: var(--mono); font-size: 10px; letter-spacing: .15em; color: var(--fg-faint); }
+#s11 .bm-pill-a { background: rgba(194,53,26,.1); border: 1px solid rgba(194,53,26,.35); color: var(--fg); padding: 10px 20px; border-radius: 100px; font-size: 13px; font-weight: 500; }
+#s11 .bm-pill-b { background: var(--bg3); border: 1px solid var(--bord); color: var(--fg-dim); padding: 10px 20px; border-radius: 100px; font-size: 13px; }
+
+/* ══ S12 FUNDING ASK ══ */
+#s12 { background: var(--bg); justify-content: flex-start; padding: 44px 80px 52px; }
+#s12 .inner { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; gap: 0; }
+#s12 .ask-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: var(--fg-faint); margin-bottom: 12px; }
+#s12 .ask-num { font-size: clamp(64px,11vw,140px); font-weight: 300; letter-spacing: -.06em; color: var(--fg); line-height: .88; }
+#s12 .ask-sub { font-family: var(--mono); font-size: clamp(10px,1.3vw,14px); letter-spacing: .2em; text-transform: uppercase; color: var(--fg-faint); margin-top: 10px; }
+#s12 .ask-uses { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; }
+#s12 .au { display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--bord); border-radius: 12px; }
+#s12 .au-num { font-family: var(--mono); font-size: 11px; color: var(--red); font-weight: 500; flex-shrink: 0; padding-top: 1px; }
+#s12 .au-text { font-size: 13px; color: var(--fg-dim); line-height: 1.5; }
+#s12 .founders { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 20px; }
+#s12 .fc { background: var(--bg2); border: 1px solid var(--bord); border-radius: 13px; padding: 14px 18px; display: flex; align-items: center; gap: 13px; }
+#s12 .fc img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid var(--bord-mid); background: var(--bg4); flex-shrink: 0; }
+#s12 .fc-name { font-size: 13px; font-weight: 600; color: var(--fg); }
+#s12 .fc-role { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-top: 2px; }
+#s12 .fc-deg { font-size: 11px; color: var(--fg-faint); margin-top: 2px; }
+#s12 .closing { font-family: var(--serif); font-style: italic; font-size: clamp(14px,1.7vw,20px); color: var(--fg-dim); text-align: center; padding-top: 16px; }
 </style>
 </head>
 <body>
 
-<div id="progress" style="width:14.3%"></div>
-<div id="counter">01 / 07</div>
-
+<div id="progress" style="width:8.33%"></div>
+<div id="counter">01 / 12</div>
 <div class="nav-btn gone" id="nav-prev" onclick="go(-1)">
   <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
 </div>
@@ -469,15 +259,13 @@ img { display: block; }
 
 <div id="deck">
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 1 · TITLE
-════════════════════════════════════════════════ -->
+<!-- ═══ S1 · TITLE ═══ -->
 <div class="slide active" id="s1">
   <div class="grid-bg"></div>
   <div class="inner">
     <div class="logo-row">
       <div class="lmark">
-        <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 26 26" fill="none">
           <circle cx="13" cy="13" r="11" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
           <polyline points="2,13 7,13 9,7 12,19 15,9 17,13 24,13"
             stroke="rgba(255,255,255,.8)" stroke-width="1.5"
@@ -492,15 +280,9 @@ img { display: block; }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 2 · PROBLEM
-════════════════════════════════════════════════ -->
+<!-- ═══ S2 · PROBLEM ═══ -->
 <div class="slide" id="s2">
-  <div class="rings">
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-  </div>
+  <div class="rings"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
   <div class="inner">
     <div class="bignum">72–99<sup>%</sup></div>
     <div class="statlabel">of ICU alarms are false positives.</div>
@@ -509,15 +291,13 @@ img { display: block; }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 3 · DEMO
-════════════════════════════════════════════════ -->
+<!-- ═══ S3 · DEMO ═══ -->
 <div class="slide" id="s3">
   <div class="grid-bg" style="opacity:.35"></div>
   <div class="headline">This is VitalSync.</div>
   <div class="dash-frame">
     <img src="./image/Screenshot 2026-04-30 at 6.34.46 PM.png"
-         alt="VitalSync — real-time ICU deterioration monitoring dashboard"
+         alt="VitalSync dashboard"
          onerror="this.parentElement.style.background='var(--bg2)';this.style.display='none'"/>
   </div>
   <div class="pills-row">
@@ -527,181 +307,399 @@ img { display: block; }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 4 · TRACTION
-════════════════════════════════════════════════ -->
+<!-- ═══ S4 · TRACTION ═══ -->
 <div class="slide" id="s4">
   <div class="grid-bg"></div>
   <div class="inner">
     <div class="place">1st Place</div>
     <div class="hackname">Harvard HSIL 2026 Hackathon</div>
     <div class="trac-grid">
-      <div class="tc">
-        <div class="tc-tag label-red">Venue</div>
-        <div class="tc-val">UCSI Hospital<br>Port Dickson · April 2026</div>
-      </div>
-      <div class="tc">
-        <div class="tc-tag label-red">Judging Panel</div>
-        <div class="tc-val">Included the Senior Director of UCSI Hospital's Healthcare Strategy Office — a practicing clinician</div>
-      </div>
-      <div class="tc">
-        <div class="tc-tag label-red">Outcome</div>
-        <div class="tc-val">Clinical endorsement on the spot · Expressed interest in a pilot collaboration</div>
-      </div>
+      <div class="tc"><div class="tc-tag label-red">Venue</div><div class="tc-val">UCSI Hospital<br>Port Dickson · April 2026</div></div>
+      <div class="tc"><div class="tc-tag label-red">Judging Panel</div><div class="tc-val">Senior Director of UCSI Hospital's Healthcare Strategy Office — a practicing clinician</div></div>
+      <div class="tc"><div class="tc-tag label-red">Outcome</div><div class="tc-val">Clinical endorsement on the spot · Expressed interest in a pilot collaboration</div></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 5 · SOLUTION
-════════════════════════════════════════════════ -->
+<!-- ═══ S5 · THE MODEL ═══ -->
 <div class="slide" id="s5">
+  <div class="tree-wrap">
+    <svg viewBox="0 0 400 340" fill="none">
+      <!-- Decision tree branches -->
+      <line x1="200" y1="30" x2="100" y2="110" stroke="white" stroke-width="1.5"/>
+      <line x1="200" y1="30" x2="300" y2="110" stroke="white" stroke-width="1.5"/>
+      <line x1="100" y1="110" x2="55"  y2="190" stroke="white" stroke-width="1.5"/>
+      <line x1="100" y1="110" x2="145" y2="190" stroke="white" stroke-width="1.5"/>
+      <line x1="300" y1="110" x2="255" y2="190" stroke="white" stroke-width="1.5"/>
+      <line x1="300" y1="110" x2="345" y2="190" stroke="white" stroke-width="1.5"/>
+      <line x1="55"  y1="190" x2="32"  y2="270" stroke="white" stroke-width="1"/>
+      <line x1="55"  y1="190" x2="78"  y2="270" stroke="white" stroke-width="1"/>
+      <line x1="145" y1="190" x2="122" y2="270" stroke="white" stroke-width="1"/>
+      <line x1="145" y1="190" x2="168" y2="270" stroke="white" stroke-width="1"/>
+      <line x1="255" y1="190" x2="232" y2="270" stroke="white" stroke-width="1"/>
+      <line x1="255" y1="190" x2="278" y2="270" stroke="white" stroke-width="1"/>
+      <line x1="345" y1="190" x2="322" y2="270" stroke="white" stroke-width="1"/>
+      <line x1="345" y1="190" x2="368" y2="270" stroke="white" stroke-width="1"/>
+      <!-- Nodes -->
+      <circle cx="200" cy="30"  r="12" fill="white"/>
+      <circle cx="100" cy="110" r="10" fill="white"/>
+      <circle cx="300" cy="110" r="10" fill="white"/>
+      <circle cx="55"  cy="190" r="8"  fill="white"/>
+      <circle cx="145" cy="190" r="8"  fill="white"/>
+      <circle cx="255" cy="190" r="8"  fill="white"/>
+      <circle cx="345" cy="190" r="8"  fill="white"/>
+    </svg>
+  </div>
   <div class="inner">
-    <!-- LEFT: Stats -->
-    <div>
-      <div class="col-label label-mono">Under the hood</div>
-      <div class="stats-grid">
-        <div class="sc">
-          <div class="sc-num">0.805</div>
-          <div class="sc-lbl">AUC — comparable to Epic Deterioration Index</div>
-        </div>
-        <div class="sc">
-          <div class="sc-num">78K</div>
-          <div class="sc-lbl">ICU patients trained on (eICU dataset)</div>
-        </div>
-        <div class="sc">
-          <div class="sc-num">$249</div>
-          <div class="sc-lbl">Edge device — NVIDIA Jetson Orin Nano</div>
-        </div>
-        <div class="sc">
-          <div class="sc-num">42</div>
-          <div class="sc-lbl">Features · no EHR required</div>
-        </div>
-      </div>
+    <div class="model-eyebrow">The Algorithm</div>
+    <div class="model-name">XGBoost.</div>
+    <div class="model-sub">Gradient boosted decision trees.</div>
+    <div class="model-rule"></div>
+    <div class="model-pills">
+      <div class="pill">78,000 real ICU patients</div>
+      <div class="pill">200+ hospitals</div>
+      <div class="pill">42 clinical features</div>
     </div>
-    <!-- RIGHT: Comparison -->
-    <div>
-      <div class="col-label label-mono">vs. the alternative</div>
-      <div class="table">
-        <div class="th">
-          <span>Feature</span>
-          <span>Epic DI</span>
-          <span>VitalSync</span>
-        </div>
-        <div class="tr">
-          <div class="tf">EHR required</div>
-          <div class="te">Yes — Epic only</div>
-          <div class="tv">None needed</div>
-        </div>
-        <div class="tr">
-          <div class="tf">Cloud dependency</div>
-          <div class="te">Yes</div>
-          <div class="tv">Fully offline</div>
-        </div>
-        <div class="tr">
-          <div class="tf">AUC performance</div>
-          <div class="te">0.80–0.82</div>
-          <div class="tv">0.805</div>
-        </div>
-        <div class="tr">
-          <div class="tf">SE Asia access</div>
-          <div class="te">Effectively none</div>
-          <div class="tv">Built for it</div>
-        </div>
-        <div class="tr">
-          <div class="tf">Patient data</div>
-          <div class="te">Leaves facility</div>
-          <div class="tv">On-premise only</div>
-        </div>
-        <div class="tr">
-          <div class="tf">Hardware cost</div>
-          <div class="te">$5,000+ / bed</div>
-          <div class="tv">$249 total</div>
-        </div>
-      </div>
-    </div>
+    <div class="model-attr">eICU Collaborative Research Database &nbsp;·&nbsp; No synthetic data &nbsp;·&nbsp; Real patients, real outcomes</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 6 · MARKET
-════════════════════════════════════════════════ -->
+<!-- ═══ S6 · AUC ═══ -->
 <div class="slide" id="s6">
-  <div class="grid-bg"></div>
+  <div class="grid-bg" style="opacity:.3"></div>
   <div class="inner">
-    <div class="slide-title">The Asia-Pacific ICU monitoring market is $1.2 billion.</div>
-    <div class="mkt-grid">
-      <div class="mc">
-        <div class="mc-tag label-mono">TAM · Global</div>
-        <div class="mc-num">$18.9B</div>
-        <div class="mc-desc">Global AI-enabled medical devices — growing to $96.5B by 2030 at 38.5% CAGR</div>
-      </div>
-      <div class="mc">
-        <div class="mc-tag label-mono">SAM · Asia-Pacific</div>
-        <div class="mc-num">$1.2B</div>
-        <div class="mc-desc">ICU patient monitoring, Asia-Pacific (2025) — our operating geography</div>
-      </div>
-      <div class="mc hl">
-        <div class="mc-tag" style="font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);opacity:.75;margin-bottom:12px">SOM · Malaysia</div>
-        <div class="mc-num">$4.2M/yr</div>
-        <div class="mc-desc">Malaysia's private hospital ICUs — ~100 sites, 3–6 month sales cycles</div>
+    <div class="auc-left">
+      <div class="auc-eyebrow">Model Performance</div>
+      <div class="auc-num">0.805</div>
+      <div class="auc-label">Area Under the<br>ROC Curve</div>
+      <div class="auc-note">
+        Epic Deterioration Index: 0.80–0.82<br>
+        VitalSync: 0.805<br>
+        — without Epic. Without the cloud.
       </div>
     </div>
-    <div class="beachhead">
-      <strong>Beachhead:</strong> Malaysia's 100 private hospital ICUs &nbsp;·&nbsp;
-      <strong>5 paying hospitals by Year 3</strong> opens Southeast Asia &nbsp;·&nbsp;
-      3–6 month procurement cycles vs 9–18 months for government hospitals
+    <div class="roc-wrap">
+      <svg viewBox="0 0 420 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid lines -->
+        <line x1="60" y1="20"  x2="60"  y2="300" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+        <line x1="60" y1="300" x2="400" y2="300" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+        <line x1="60" y1="220" x2="400" y2="220" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="60" y1="140" x2="400" y2="140" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="60" y1="60"  x2="400" y2="60"  stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="145" y1="20" x2="145" y2="300" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="230" y1="20" x2="230" y2="300" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <line x1="315" y1="20" x2="315" y2="300" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <!-- Diagonal (random classifier) -->
+        <line x1="60" y1="300" x2="400" y2="20" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="5 4"/>
+        <!-- AUC fill -->
+        <path d="M 60,300 C 90,80 230,24 400,20 L 400,300 Z" fill="rgba(194,53,26,0.12)"/>
+        <!-- ROC curve -->
+        <path d="M 60,300 C 90,80 230,24 400,20" stroke="#C2351A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <!-- Axis labels -->
+        <text x="230" y="322" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle" letter-spacing="0.1em">FALSE POSITIVE RATE</text>
+        <text x="28" y="162" fill="rgba(255,255,255,0.3)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle" letter-spacing="0.1em" transform="rotate(-90,28,162)">TRUE POSITIVE RATE</text>
+        <!-- Tick labels -->
+        <text x="56"  y="314" fill="rgba(255,255,255,0.25)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">0</text>
+        <text x="400" y="314" fill="rgba(255,255,255,0.25)" font-family="DM Mono,monospace" font-size="8" text-anchor="middle">1</text>
+        <text x="44"  y="304" fill="rgba(255,255,255,0.25)" font-family="DM Mono,monospace" font-size="8" text-anchor="end">0</text>
+        <text x="44"  y="24"  fill="rgba(255,255,255,0.25)" font-family="DM Mono,monospace" font-size="8" text-anchor="end">1</text>
+        <!-- AUC annotation -->
+        <text x="310" y="200" fill="rgba(194,53,26,0.7)" font-family="DM Mono,monospace" font-size="9" letter-spacing="0.08em">AUC = 0.805</text>
+      </svg>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SLIDE 7 · BUSINESS MODEL + ASK
-════════════════════════════════════════════════ -->
+<!-- ═══ S7 · HARDWARE ═══ -->
 <div class="slide" id="s7">
-  <div class="grid-bg" style="opacity:.28"></div>
+  <div class="grid-bg" style="opacity:.25"></div>
   <div class="inner">
+    <div class="hw-eyebrow">The Edge Device</div>
+    <div class="hw-frame">
+      <img src="./image/jetson.png" alt="NVIDIA Jetson Orin Nano"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+      <!-- PCB placeholder SVG -->
+      <svg viewBox="0 0 380 240" fill="none" style="display:flex;width:100%;padding:16px">
+        <rect x="10" y="10" width="360" height="220" rx="8" fill="#1A1714" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <!-- GPIO header -->
+        <rect x="30" y="16" width="200" height="10" rx="2" fill="#201D1A" stroke="rgba(255,255,255,0.08)" stroke-width="0.5"/>
+        <!-- Main SoC -->
+        <rect x="120" y="55" width="140" height="120" rx="4" fill="rgba(194,53,26,0.12)" stroke="rgba(194,53,26,0.4)" stroke-width="1"/>
+        <text x="190" y="112" fill="rgba(194,53,26,0.55)" font-family="monospace" font-size="11" text-anchor="middle" letter-spacing="0.05em">NVIDIA</text>
+        <text x="190" y="130" fill="rgba(194,53,26,0.45)" font-family="monospace" font-size="8" text-anchor="middle" letter-spacing="0.04em">Jetson Orin Nano</text>
+        <!-- RAM chips -->
+        <rect x="38" y="68" width="68" height="36" rx="3" fill="#201D1A" stroke="rgba(255,255,255,0.09)" stroke-width="0.5"/>
+        <rect x="38" y="112" width="68" height="36" rx="3" fill="#201D1A" stroke="rgba(255,255,255,0.09)" stroke-width="0.5"/>
+        <!-- Other chips -->
+        <rect x="274" y="68" width="68" height="36" rx="3" fill="#201D1A" stroke="rgba(255,255,255,0.09)" stroke-width="0.5"/>
+        <rect x="274" y="112" width="68" height="36" rx="3" fill="#201D1A" stroke="rgba(255,255,255,0.09)" stroke-width="0.5"/>
+        <!-- USB-C port -->
+        <rect x="355" y="82" width="12" height="22" rx="3" fill="#201D1A" stroke="rgba(255,255,255,0.12)" stroke-width="0.8"/>
+        <!-- Connector -->
+        <rect x="355" y="118" width="12" height="40" rx="2" fill="#201D1A" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <!-- Trace lines -->
+        <line x1="106" y1="84"  x2="120" y2="84"  stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+        <line x1="106" y1="128" x2="120" y2="128" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+        <line x1="260" y1="84"  x2="274" y2="84"  stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+        <line x1="260" y1="128" x2="274" y2="128" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+        <!-- Heatsink suggestion -->
+        <line x1="130" y1="40" x2="130" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+        <line x1="148" y1="38" x2="148" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+        <line x1="166" y1="38" x2="166" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+        <line x1="184" y1="38" x2="184" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+        <line x1="202" y1="38" x2="202" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+        <line x1="220" y1="38" x2="220" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+        <line x1="238" y1="40" x2="238" y2="54" stroke="rgba(255,255,255,0.07)" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="hw-price">$249</div>
+    <div class="hw-name">NVIDIA Jetson Orin Nano</div>
+    <div class="hw-tagline">Runs entirely offline &nbsp;·&nbsp; Patient data never leaves the hospital</div>
+  </div>
+</div>
 
-    <div class="top">
-      <!-- Pricing -->
-      <div class="price-card">
-        <div class="label-mono" style="margin-bottom:14px">Business Model</div>
-        <div class="big-price">$560</div>
-        <div class="sub-mono">Per ward &nbsp;/&nbsp; per month</div>
-        <div class="payback">
-          Pays for itself if it prevents <strong>one unplanned ICU admission</strong> per month —
-          a Malaysian private hospital ICU admission costs <strong>$670–$1,340</strong> in bed costs alone.
-          License a ward. Prevent one escalation. Subscription covered.
-        </div>
+<!-- ═══ S8 · TAM — ASIA-PACIFIC ═══ -->
+<div class="slide map-slide" id="s8">
+  <div class="map-card">
+    <div class="mc-tag">TAM · Global</div>
+    <div class="mc-num">$18.9B</div>
+    <div class="mc-desc">Global AI Medical Devices</div>
+    <div class="mc-sub">Growing to $96.5B by 2030<br>at 38.5% CAGR</div>
+  </div>
+  <div class="map-svg-wrap">
+    <svg viewBox="0 0 960 560" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="960" height="560" fill="#06080A"/>
+      <!-- Graticule -->
+      <line class="gratline" x1="38"  y1="0" x2="38"  y2="560"/><!-- 60°E -->
+      <line class="gratline" x1="192" y1="0" x2="192" y2="560"/><!-- 80°E -->
+      <line class="gratline" x1="346" y1="0" x2="346" y2="560"/><!-- 100°E -->
+      <line class="gratline" x1="500" y1="0" x2="500" y2="560"/><!-- 120°E -->
+      <line class="gratline" x1="654" y1="0" x2="654" y2="560"/><!-- 140°E -->
+      <line class="gratline" x1="808" y1="0" x2="808" y2="560"/><!-- 160°E -->
+      <line class="gratline" x1="0" y1="80"  x2="960" y2="80"/> <!-- 40°N -->
+      <line class="gratline" x1="0" y1="187" x2="960" y2="187"/><!-- 20°N -->
+      <line class="gratline" x1="0" y1="293" x2="960" y2="293"/><!-- 0° -->
+      <line class="gratline" x1="0" y1="400" x2="960" y2="400"/><!-- 20°S -->
+      <line class="gratline" x1="0" y1="507" x2="960" y2="507"/><!-- 40°S -->
+      <!-- India -->
+      <path class="land" d="M 88,160 L 165,142 L 225,155 L 280,168 L 262,218 L 218,258 L 168,275 L 128,258 L 100,225 L 88,192 Z"/>
+      <!-- Sri Lanka -->
+      <path class="land" d="M 172,280 L 190,272 L 200,290 L 185,302 L 168,295 Z"/>
+      <!-- Bangladesh/Myanmar coast -->
+      <path class="land" d="M 280,168 L 322,155 L 348,175 L 352,205 L 335,238 L 312,248 L 290,228 L 280,198 Z"/>
+      <!-- SE Asia Mainland (Myanmar+Thailand+Laos+Cambodia+Vietnam) -->
+      <path class="land" d="M 308,148 L 362,138 L 412,150 L 438,178 L 438,210 L 418,240 L 398,265 L 378,272 L 355,268 L 335,255 L 315,252 L 298,228 L 295,195 L 308,170 Z"/>
+      <!-- Vietnam east coast extension -->
+      <path class="land" d="M 378,272 L 398,265 L 418,240 L 432,210 L 428,185 L 415,175 L 440,175 L 452,198 L 448,235 L 432,265 L 415,280 L 398,285 L 380,278 Z"/>
+      <!-- Malay Peninsula -->
+      <path class="land-hl" d="M 338,255 L 382,252 L 390,268 L 386,290 L 378,308 L 368,312 L 360,298 L 355,278 L 348,268 Z"/>
+      <!-- China -->
+      <path class="land" d="M 138,90 L 285,78 L 420,62 L 580,35 L 615,65 L 528,105 L 495,142 L 455,175 L 412,150 L 362,138 L 285,158 L 230,158 L 172,142 L 138,112 Z"/>
+      <!-- Korean Peninsula -->
+      <path class="land" d="M 468,78 L 500,72 L 518,90 L 510,118 L 488,125 L 462,118 L 455,100 Z"/>
+      <!-- Japan Honshu -->
+      <path class="land" d="M 532,105 L 580,92 L 620,100 L 658,82 L 662,95 L 640,108 L 608,118 L 572,122 L 535,122 Z"/>
+      <!-- Japan Kyushu -->
+      <path class="land" d="M 548,122 L 578,118 L 582,138 L 562,148 L 542,140 Z"/>
+      <!-- Japan Hokkaido -->
+      <path class="land" d="M 622,72 L 655,65 L 672,78 L 655,92 L 622,88 Z"/>
+      <!-- Japan Shikoku -->
+      <path class="land" d="M 558,125 L 580,120 L 585,133 L 560,136 Z"/>
+      <!-- Philippines Luzon -->
+      <path class="land" d="M 510,188 L 535,178 L 550,198 L 542,228 L 520,238 L 505,225 Z"/>
+      <!-- Philippines Visayas -->
+      <path class="land" d="M 518,248 L 548,240 L 562,258 L 548,272 L 518,268 Z"/>
+      <!-- Philippines Mindanao -->
+      <path class="land" d="M 520,278 L 558,270 L 578,285 L 565,312 L 528,318 L 510,305 Z"/>
+      <!-- Borneo -->
+      <path class="land" d="M 385,242 L 462,235 L 492,248 L 505,278 L 495,308 L 460,325 L 400,328 L 370,315 L 362,285 L 368,258 Z"/>
+      <!-- Sumatra -->
+      <path class="land" d="M 272,268 L 345,258 L 382,268 L 392,305 L 375,340 L 308,345 L 258,322 L 248,292 Z"/>
+      <!-- Java -->
+      <path class="land" d="M 358,345 L 418,338 L 458,342 L 470,358 L 418,372 L 365,368 L 345,358 Z"/>
+      <!-- Sulawesi -->
+      <path class="land" d="M 490,268 L 514,258 L 530,272 L 516,298 L 540,318 L 524,335 L 506,322 L 498,302 L 475,318 L 470,302 L 480,285 Z"/>
+      <!-- Papua New Guinea -->
+      <path class="land" d="M 618,300 L 688,285 L 718,298 L 725,322 L 690,338 L 628,342 L 612,325 Z"/>
+      <!-- Australia -->
+      <path class="land" d="M 440,445 L 490,418 L 538,392 L 560,372 L 580,358 L 608,348 L 625,352 L 625,372 L 650,352 L 685,342 L 718,358 L 740,378 L 755,412 L 760,445 L 742,480 L 705,502 L 660,512 L 612,512 L 572,500 L 542,480 L 512,462 L 488,455 L 462,452 Z"/>
+      <!-- New Zealand North -->
+      <path class="land" d="M 752,478 L 780,468 L 796,488 L 780,510 L 752,508 Z"/>
+      <!-- New Zealand South -->
+      <path class="land" d="M 750,520 L 782,510 L 802,528 L 796,552 L 758,562 L 740,545 Z"/>
+      <!-- Region label -->
+      <text x="480" y="480" fill="rgba(194,53,26,0.15)" font-family="DM Mono,monospace" font-size="11" text-anchor="middle" letter-spacing="0.18em" text-transform="uppercase">ASIA-PACIFIC</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ S9 · SAM — SOUTHEAST ASIA ═══ -->
+<div class="slide map-slide" id="s9">
+  <div class="map-card">
+    <div class="mc-tag">SAM · Asia-Pacific</div>
+    <div class="mc-num">$1.2B</div>
+    <div class="mc-desc">Asia-Pacific ICU Monitoring</div>
+    <div class="mc-sub">Our operating geography<br>Malaysia first</div>
+  </div>
+  <div class="map-svg-wrap">
+    <!-- SEA: viewBox 0 0 900 520, lon 92-142°E, lat 28 to -12°N -->
+    <!-- x=(lon-92)*18, y=(28-lat)*12.5 -->
+    <svg viewBox="0 0 900 520" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="520" fill="#06080A"/>
+      <!-- Gratlines -->
+      <line class="gratline" x1="144" y1="0" x2="144" y2="520"/><!-- 100°E -->
+      <line class="gratline" x1="324" y1="0" x2="324" y2="520"/><!-- 110°E -->
+      <line class="gratline" x1="504" y1="0" x2="504" y2="520"/><!-- 120°E -->
+      <line class="gratline" x1="684" y1="0" x2="684" y2="520"/><!-- 130°E -->
+      <line class="gratline" x1="0" y1="100" x2="900" y2="100"/><!-- 20°N -->
+      <line class="gratline" x1="0" y1="225" x2="900" y2="225"/><!-- 10°N -->
+      <line class="gratline" x1="0" y1="350" x2="900" y2="350"/><!-- 0° -->
+      <line class="gratline" x1="0" y1="475" x2="900" y2="475"/><!-- 10°S -->
+      <!-- Myanmar -->
+      <path class="land" d="M 0,10 L 128,0 L 148,60 L 145,138 L 108,188 L 65,195 L 22,168 L 0,125 Z"/>
+      <!-- Thailand (incl. Kra Isthmus) -->
+      <path class="land" d="M 128,0 L 185,5 L 248,38 L 278,85 L 272,138 L 248,165 L 222,190 L 198,215 L 185,250 L 172,290 L 162,315 L 148,295 L 150,265 L 155,238 L 152,212 L 138,200 L 108,200 L 85,210 L 68,212 L 55,195 L 78,185 L 108,188 L 128,162 L 142,138 L 145,95 Z"/>
+      <!-- Laos -->
+      <path class="land" d="M 248,38 L 308,10 L 332,38 L 322,87 L 300,125 L 275,152 L 248,162 L 225,152 L 225,125 L 250,100 L 272,75 Z"/>
+      <!-- Vietnam -->
+      <path class="land" d="M 302,5 L 352,15 L 382,38 L 388,75 L 380,112 L 358,150 L 338,175 L 325,212 L 320,238 L 295,262 L 275,275 L 262,262 L 268,238 L 280,212 L 298,188 L 308,162 L 300,138 L 290,112 L 295,75 L 310,38 Z"/>
+      <!-- Cambodia -->
+      <path class="land" d="M 222,190 L 272,182 L 310,178 L 325,212 L 295,238 L 250,245 L 220,238 L 208,222 L 215,202 Z"/>
+      <!-- Peninsular Malaysia — HIGHLIGHTED -->
+      <path class="land-hl" d="M 138,295 L 182,288 L 222,305 L 230,340 L 222,368 L 212,378 L 200,370 L 190,355 L 175,340 L 160,335 L 145,342 L 138,360 L 128,345 L 125,318 Z"/>
+      <!-- Singapore dot -->
+      <circle cx="214" cy="382" r="4" fill="rgba(194,53,26,0.5)" stroke="rgba(194,53,26,0.8)" stroke-width="1"/>
+      <!-- Sumatra -->
+      <path class="land" d="M 28,288 L 118,272 L 225,285 L 255,318 L 252,388 L 222,422 L 122,428 L 38,400 L 12,358 L 10,305 Z"/>
+      <!-- Java -->
+      <path class="land" d="M 222,422 L 305,415 L 425,420 L 448,438 L 398,455 L 278,460 L 215,448 Z"/>
+      <!-- Borneo (full) -->
+      <path class="land-dim" d="M 298,272 L 390,258 L 448,252 L 495,268 L 505,300 L 498,335 L 462,352 L 390,358 L 305,352 L 272,325 Z"/>
+      <!-- East Malaysia on Borneo — HIGHLIGHTED -->
+      <path class="land-hl" d="M 298,272 L 390,258 L 448,252 L 492,268 L 500,298 L 488,322 L 452,338 L 388,345 L 302,338 L 278,318 Z"/>
+      <!-- Philippines Luzon -->
+      <path class="land" d="M 502,128 L 540,118 L 558,142 L 552,182 L 530,198 L 508,182 Z"/>
+      <!-- Philippines Visayas -->
+      <path class="land" d="M 520,212 L 565,205 L 582,225 L 568,248 L 528,252 Z"/>
+      <!-- Philippines Mindanao -->
+      <path class="land" d="M 515,262 L 562,252 L 595,275 L 578,310 L 542,318 L 510,305 Z"/>
+      <!-- Sulawesi -->
+      <path class="land" d="M 510,330 L 548,315 L 568,335 L 548,360 L 578,385 L 558,408 L 540,392 L 528,370 L 505,390 L 495,370 L 510,348 Z"/>
+      <!-- Country labels -->
+      <text x="68"  y="108" class="city-label">Myanmar</text>
+      <text x="162" y="145" class="city-label">Thailand</text>
+      <text x="298" y="72"  class="city-label">Vietnam</text>
+      <text x="248" y="215" class="city-label">Cambodia</text>
+      <text x="155" y="328" class="city-label" fill="rgba(194,53,26,0.7)">Malaysia</text>
+      <text x="378" y="305" class="city-label">Borneo</text>
+      <text x="102" y="358" class="city-label">Sumatra</text>
+      <text x="530" y="158" class="city-label">Philippines</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ S10 · SOM — MALAYSIA ═══ -->
+<div class="slide map-slide" id="s10">
+  <div class="map-card">
+    <div class="mc-tag">SOM · Malaysia</div>
+    <div class="mc-num">$4.2M/yr</div>
+    <div class="mc-desc">Malaysia Private Hospital ICUs</div>
+    <div class="mc-sub">~100 ICU sites<br>3–6 month sales cycles</div>
+  </div>
+  <div class="map-svg-wrap">
+    <!-- Malaysia: viewBox 0 0 900 500, lon 99-120°E, lat 8-0°N -->
+    <!-- x=(lon-99)*42.86, y=(8-lat)*62.5 -->
+    <svg viewBox="0 0 900 500" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="900" height="500" fill="#06080A"/>
+      <!-- Gratlines -->
+      <line class="gratline" x1="43"  y1="0" x2="43"  y2="500"/><!-- 100°E -->
+      <line class="gratline" x1="214" y1="0" x2="214" y2="500"/><!-- 104°E -->
+      <line class="gratline" x1="429" y1="0" x2="429" y2="500"/><!-- 109°E -->
+      <line class="gratline" x1="643" y1="0" x2="643" y2="500"/><!-- 114°E -->
+      <line class="gratline" x1="857" y1="0" x2="857" y2="500"/><!-- 119°E -->
+      <line class="gratline" x1="0" y1="125" x2="900" y2="125"/><!-- 6°N -->
+      <line class="gratline" x1="0" y1="250" x2="900" y2="250"/><!-- 4°N -->
+      <line class="gratline" x1="0" y1="375" x2="900" y2="375"/><!-- 2°N -->
+      <!-- Thailand outline faint (north of peninsula) -->
+      <path class="land-dim" d="M -20,80 L 35,90 L 80,95 L 130,102 L 160,120 L 128,108 L 95,108 L 60,108 L 30,108 L -20,95 Z"/>
+      <!-- Kalimantan faint outline (south of East Malaysia) -->
+      <path class="land-dim" d="M 445,260 L 498,445 L 600,488 L 720,480 L 830,450 L 870,350 L 862,200 L 820,220 L 800,248 L 775,255 L 730,258 L 680,268 L 620,348 L 548,410 L 490,442 L 458,420 L 450,340 L 448,270 Z"/>
+      <!-- Peninsular Malaysia — HIGHLIGHTED -->
+      <path class="land-hl" d="M 30,106 L 69,106 L 100,119 L 122,156 L 164,156 L 195,188 L 203,250 L 210,313 L 214,356 L 210,388 L 207,413 L 202,419 L 190,419 L 168,413 L 142,406 L 118,388 L 100,365 L 90,340 L 82,312 L 78,282 L 72,250 L 65,218 L 55,188 L 48,156 L 42,125 Z"/>
+      <!-- Penang Island -->
+      <path class="land-hl" d="M 36,158 L 62,150 L 68,165 L 50,173 Z"/>
+      <!-- East Malaysia (Sarawak + Sabah) — HIGHLIGHTED -->
+      <path class="land-hl" d="M 452,252 L 524,235 L 598,220 L 648,210 L 658,185 L 688,178 L 715,185 L 733,120 L 762,56 L 826,75 L 862,188 L 810,244 L 772,252 L 716,232 L 665,262 L 600,344 L 535,408 L 492,440 L 462,420 L 452,344 Z"/>
+      <!-- Brunei (not Malaysia) -->
+      <path class="land-dim" d="M 648,210 L 695,205 L 712,238 L 698,252 L 662,256 L 648,235 Z"/>
+      <!-- City dots -->
+      <circle cx="116" cy="306" r="5" class="city-dot"/><!-- KL -->
+      <circle cx="56"  cy="163" r="4" class="city-dot"/><!-- Penang -->
+      <circle cx="204" cy="413" r="4" class="city-dot"/><!-- JB -->
+      <circle cx="484" cy="406" r="4" class="city-dot"/><!-- Kuching -->
+      <circle cx="733" cy="125" r="4" class="city-dot"/><!-- KK -->
+      <!-- City labels -->
+      <text x="126" y="302" class="city-label" fill="rgba(194,53,26,0.8)">Kuala Lumpur</text>
+      <text x="68"  y="158" class="city-label" fill="rgba(194,53,26,0.7)">Penang</text>
+      <text x="215" y="408" class="city-label" fill="rgba(194,53,26,0.7)">Johor Bahru</text>
+      <text x="495" y="402" class="city-label" fill="rgba(194,53,26,0.7)">Kuching</text>
+      <text x="745" y="120" class="city-label" fill="rgba(194,53,26,0.7)">Kota Kinabalu</text>
+      <!-- Region labels -->
+      <text x="130" y="290" class="city-label" fill="rgba(255,255,255,0.12)" font-size="22" font-weight="600" dy="28">Peninsular</text>
+      <text x="620" y="330" class="city-label" fill="rgba(255,255,255,0.12)" font-size="20" font-weight="600">East Malaysia</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ S11 · BUSINESS MODEL ═══ -->
+<div class="slide" id="s11">
+  <div class="grid-bg" style="opacity:.35"></div>
+  <div class="inner">
+    <div class="bm-eyebrow">Subscription · SaaS</div>
+    <div class="bm-price">$560</div>
+    <div class="bm-period">Per ward &nbsp;·&nbsp; Per month</div>
+    <div class="bm-rule"></div>
+    <div class="bm-quote">Prevent one ICU escalation.<br>Subscription covered.</div>
+    <div class="bm-compare">
+      <div class="bm-pill-a">VitalSync: $560 / month</div>
+      <div class="bm-vs">vs</div>
+      <div class="bm-pill-b">One ICU admission: $670–$1,340 / bed</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ S12 · FUNDING ASK ═══ -->
+<div class="slide" id="s12">
+  <div class="grid-bg" style="opacity:.22"></div>
+  <div class="inner">
+    <div class="ask-eyebrow">Pre-seed Round</div>
+    <div class="ask-num">$115,000</div>
+    <div class="ask-sub">18-month runway</div>
+    <div class="ask-uses">
+      <div class="au">
+        <span class="au-num">01</span>
+        <span class="au-text">MDA regulatory groundwork — Class C SaMD registration, ISO 13485 QMS initiation</span>
       </div>
-      <!-- Ask -->
-      <div class="ask-card">
-        <div class="label-mono" style="margin-bottom:14px">Pre-seed Ask</div>
-        <div class="big-ask">$115,000</div>
-        <div class="sub-mono">18-month runway</div>
-        <ul class="use-list">
-          <li>MDA regulatory groundwork — Class C SaMD registration, ISO 13485 QMS initiation</li>
-          <li>Clinical pilot at UCSI Hospital — IRB-approved research study, 30–50 patients</li>
-          <li>HL7 FHIR integration + independent security audit</li>
-          <li>$80,000 verified operational costs · $35,000 contingency for regulatory resubmissions</li>
-        </ul>
+      <div class="au">
+        <span class="au-num">02</span>
+        <span class="au-text">IRB-approved clinical pilot at UCSI Hospital — 30–50 ICU patients, HL7 FHIR integration, independent security audit</span>
+      </div>
+      <div class="au">
+        <span class="au-num">03</span>
+        <span class="au-text">$80,000 verified operational costs &nbsp;·&nbsp; $35,000 contingency for regulatory resubmissions</span>
       </div>
     </div>
-
-    <!-- Founders -->
     <div class="founders">
       <div class="fc">
-        <img src="./image/pfp/abder.png" alt="Abderrahman"
-             onerror="this.style.display='none'"/>
+        <img src="./image/pfp/abder.png" alt="Abderrahman" onerror="this.style.display='none'"/>
         <div>
           <div class="fc-name">Abderrahman Nabeel Al-Qirim</div>
           <div class="fc-role">Co-founder · CTO</div>
-          <div class="fc-deg">BSc Medical Informatics, RUMC · Built the ML pipeline &amp; backend</div>
+          <div class="fc-deg">BSc Medical Informatics, RUMC · ML pipeline &amp; backend</div>
         </div>
       </div>
       <div class="fc">
-        <img src="./image/pfp/n.png" alt="Hamizan Naeem"
-             onerror="this.style.display='none'"/>
+        <img src="./image/pfp/n.png" alt="Hamizan Naeem" onerror="this.style.display='none'"/>
         <div>
           <div class="fc-name">Hamizan Naeem Bin Hazlan</div>
           <div class="fc-role">Co-founder · CEO</div>
@@ -709,7 +707,6 @@ img { display: block; }
         </div>
       </div>
     </div>
-
     <div class="closing">"The next milestone is running inside a real ICU."</div>
   </div>
 </div>
@@ -718,41 +715,32 @@ img { display: block; }
 
 <script>
 (function () {
-  const TOTAL = 7;
+  const TOTAL = 12;
   let cur = 1;
-
   const slides  = document.querySelectorAll('.slide');
   const counter = document.getElementById('counter');
   const bar     = document.getElementById('progress');
   const prev    = document.getElementById('nav-prev');
   const next    = document.getElementById('nav-next');
-
   function pad(n) { return (n < 10 ? '0' : '') + n; }
-
   function go(dir) {
     const nxt = cur + dir;
     if (nxt < 1 || nxt > TOTAL) return;
-
     slides[cur - 1].classList.remove('active');
     slides[cur - 1].classList.add('exit');
     setTimeout(() => slides[cur - 1].classList.remove('exit'), 280);
-
     cur = nxt;
     slides[cur - 1].classList.add('active');
-
     counter.textContent = pad(cur) + ' / ' + pad(TOTAL);
     bar.style.width = ((cur / TOTAL) * 100) + '%';
     prev.classList.toggle('gone', cur === 1);
     next.classList.toggle('gone', cur === TOTAL);
   }
-
   window.go = go;
-
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ')  { e.preventDefault(); go(1); }
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')                 { e.preventDefault(); go(-1); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
   });
-
   let tx = 0;
   document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
   document.addEventListener('touchend',   e => {
