@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VitalSync — Pitch Deck · Yaqeen Health</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────
+   DESIGN TOKENS  (match vitalsync.my exactly)
+──────────────────────────────────────────────── */
+:root {
+  --bg:       #0D0B09;
+  --bg2:      #131110;
+  --bg3:      #1A1714;
+  --bg4:      #201D1A;
+  --red:      #C2351A;
+  --red-deep: #9A2712;
+  --fg:       #F0EAE3;
+  --fg-dim:   #8A827A;
+  --fg-faint: #4A4440;
+  --bord:     rgba(255,255,255,0.07);
+  --bord-mid: rgba(255,255,255,0.13);
+  --font:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --serif:    'Instrument Serif', Georgia, serif;
+  --mono:     'DM Mono', ui-monospace, monospace;
+}
+
+/* ─────────────────────────────────────────────────
+   RESET
+──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+img { display: block; }
+
+/* ─────────────────────────────────────────────────
+   PROGRESS BAR
+──────────────────────────────────────────────── */
+#progress {
+  position: fixed; top: 0; left: 0;
+  height: 2px; background: var(--red);
+  z-index: 900; transition: width .45s cubic-bezier(.4,0,.2,1);
+}
+
+/* ─────────────────────────────────────────────────
+   SLIDE COUNTER
+──────────────────────────────────────────────── */
+#counter {
+  position: fixed; bottom: 28px; right: 36px;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: .15em; color: var(--fg-faint);
+  z-index: 900; user-select: none;
+}
+
+/* ─────────────────────────────────────────────────
+   NAV ARROWS
+──────────────────────────────────────────────── */
+.nav-btn {
+  position: fixed; bottom: 22px;
+  z-index: 900; width: 34px; height: 34px;
+  border-radius: 50%; border: 1px solid var(--bord);
+  background: rgba(13,11,9,.8); backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: border-color .2s, opacity .2s;
+  opacity: .55;
+}
+.nav-btn:hover { border-color: var(--bord-mid); opacity: 1; }
+.nav-btn svg { width: 15px; height: 15px; stroke: var(--fg-dim); stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+#nav-prev { left: calc(50% - 48px); }
+#nav-next { left: calc(50% + 14px); }
+.nav-btn.gone { opacity: 0; pointer-events: none; }
+
+/* ─────────────────────────────────────────────────
+   SLIDE ENGINE
+──────────────────────────────────────────────── */
+#deck { width: 100%; height: 100%; position: relative; }
+
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 64px 88px;
+  opacity: 0; transform: translateY(18px);
+  transition: opacity .38s ease, transform .38s ease;
+  pointer-events: none; overflow: hidden;
+}
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: all; }
+.slide.exit   { opacity: 0; transform: translateY(-18px); transition: opacity .25s, transform .25s; }
+
+/* ─────────────────────────────────────────────────
+   DOT GRID PATTERN
+──────────────────────────────────────────────── */
+.grid-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,.042) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* ─────────────────────────────────────────────────
+   PULSING RINGS
+──────────────────────────────────────────────── */
+.rings { position: absolute; top: 50%; left: 50%; pointer-events: none; z-index: 0; }
+.ring {
+  position: absolute; width: 520px; height: 520px;
+  transform: translate(-50%,-50%);
+  border-radius: 50%; border: 1px solid rgba(194,53,26,.2);
+  animation: ringpop 3.6s ease-out infinite;
+}
+.ring:nth-child(2) { animation-delay: 1.2s; }
+.ring:nth-child(3) { animation-delay: 2.4s; }
+@keyframes ringpop {
+  0%   { opacity: .85; transform: translate(-50%,-50%) scale(.1); }
+  100% { opacity: 0;   transform: translate(-50%,-50%) scale(1); }
+}
+
+/* ─────────────────────────────────────────────────
+   SHARED ATOMS
+──────────────────────────────────────────────── */
+.label-mono {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--fg-faint);
+}
+.label-red {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--red); opacity: .75;
+}
+.card {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 18px; padding: 26px 24px;
+}
+.card-accent {
+  background: rgba(194,53,26,.05); border: 1px solid rgba(194,53,26,.28);
+  border-radius: 18px; padding: 26px 24px;
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 18px; border-radius: 100px;
+  border: 1px solid var(--bord-mid); font-size: 12.5px;
+  color: var(--fg-dim); font-weight: 500;
+  background: rgba(255,255,255,.03);
+}
+.pill-live {
+  border-color: rgba(34,197,94,.35);
+  background: rgba(34,197,94,.06); color: #4ade80;
+}
+.dot-live {
+  width: 6px; height: 6px; border-radius: 50%; background: #22c55e;
+  animation: dotpulse 2s ease-in-out infinite;
+}
+@keyframes dotpulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,.6); }
+  50%       { opacity: .7; box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 1 — TITLE
+══════════════════════════════════════════════════ */
+#s1 { background: var(--bg); }
+#s1 .inner {
+  position: relative; z-index: 1;
+  text-align: center; display: flex;
+  flex-direction: column; align-items: center; gap: 18px;
+}
+#s1 .logo-row {
+  display: flex; align-items: center; gap: 16px;
+}
+#s1 .lmark svg { width: 56px; height: 56px; }
+#s1 .ltext {
+  font-size: clamp(44px, 6vw, 68px); font-weight: 800;
+  letter-spacing: -.04em; color: var(--fg);
+}
+#s1 .tagline {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(18px, 2.2vw, 26px);
+  color: var(--fg-dim); letter-spacing: -.01em;
+}
+#s1 .rule { width: 44px; height: 1px; background: var(--bord-mid); }
+#s1 .foot {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--fg-faint);
+}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 2 — PROBLEM
+══════════════════════════════════════════════════ */
+#s2 { background: var(--bg); }
+#s2 .inner {
+  position: relative; z-index: 1;
+  text-align: center; display: flex;
+  flex-direction: column; align-items: center;
+}
+#s2 .bignum {
+  font-size: clamp(110px, 19vw, 250px); font-weight: 300;
+  line-height: .88; letter-spacing: -.07em;
+  color: var(--red); font-feature-settings: "ss01";
+  position: relative; z-index: 1;
+}
+#s2 .bignum sup {
+  font-size: .22em; color: var(--fg-dim);
+  font-weight: 400; vertical-align: super; letter-spacing: 0;
+}
+#s2 .statlabel {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(20px, 2.6vw, 34px);
+  color: var(--fg-dim); max-width: 26ch;
+  margin-top: 32px; line-height: 1.35; letter-spacing: -.01em;
+}
+#s2 .statsub {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(15px, 1.8vw, 22px);
+  color: var(--fg-faint); margin-top: 8px; letter-spacing: -.01em;
+}
+#s2 .attr {
+  font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--fg-faint); margin-top: 44px;
+}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 3 — DEMO
+══════════════════════════════════════════════════ */
+#s3 {
+  background: var(--bg);
+  align-items: flex-start;
+  padding: 52px 80px 68px;
+}
+#s3 .headline {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(32px, 4.5vw, 58px);
+  color: var(--fg); letter-spacing: -.02em;
+  margin-bottom: 22px; position: relative; z-index: 1;
+}
+#s3 .dash-frame {
+  width: 100%; flex: 1;
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--bord-mid);
+  background: var(--bg2);
+  position: relative; z-index: 1;
+  min-height: 0;
+}
+#s3 .dash-frame img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+#s3 .pills-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 18px; position: relative; z-index: 1;
+}
+
+/* ══════════════════════════════════════════════════
+   SLIDE 4 — TRACTION
+══════════════════════════════════════════════════ */
+#s4 { background: var(--bg); }
+#s4 .inner {
+  position: relative; z-index: 1;
+  text-align: center; width: 100%;
+}
+#s4 .place {
+  font-size: clamp(72px, 14vw, 160px); font-weight: 800;
+  letter-spacing: -.05em; line-height: .9; color: var(--red);
+  margin-bottom: 6px;
+}
+#s4 .hackname {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(20px, 2.8vw, 38px);
+  color: var(--fg-dim); letter-spacing: -.01em;
+  margin-bottom: 44px;
+}
+#s4 .trac-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; max-width: 860px; margin: 0 auto;
+}
+#s4 .tc {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 16px; padding: 22px 20px; text-align: left;
+}
+#s4 .tc-tag { margin-bottom: 9px; }
+#s4 .tc-val { font-size: 14px; font-weight: 500; color: var(--fg); line-height: 1.45; }
+
+/* ══════════════════════════════════════════════════
+   SLIDE 5 — SOLUTION
+══════════════════════════════════════════════════ */
+#s5 { background: var(--bg); }
+#s5 .inner {
+  position: relative; z-index: 1; width: 100%;
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  gap: 22px; max-width: 1080px;
+}
+#s5 .col-label { margin-bottom: 16px; }
+#s5 .stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+#s5 .sc {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 15px; padding: 20px 18px;
+}
+#s5 .sc-num {
+  font-size: clamp(28px, 4vw, 48px); font-weight: 300;
+  letter-spacing: -.04em; color: var(--red);
+  line-height: 1; margin-bottom: 7px;
+}
+#s5 .sc-lbl {
+  font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .11em; text-transform: uppercase;
+  color: var(--fg-faint); line-height: 1.45;
+}
+#s5 .table {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 16px; overflow: hidden;
+}
+#s5 .th {
+  display: grid; grid-template-columns: 1.1fr 1fr 1fr;
+  padding: 12px 18px; border-bottom: 1px solid var(--bord);
+  background: var(--bg2);
+}
+#s5 .th span {
+  font-family: var(--mono); font-size: 8.5px;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--fg-faint);
+}
+#s5 .th span:last-child { color: var(--red); opacity: .7; }
+#s5 .tr {
+  display: grid; grid-template-columns: 1.1fr 1fr 1fr;
+  padding: 12px 18px; border-bottom: 1px solid var(--bord);
+  align-items: center;
+}
+#s5 .tr:last-child { border-bottom: none; }
+#s5 .tf { font-size: 12px; font-weight: 500; color: var(--fg-dim); }
+#s5 .te { font-size: 12px; color: var(--fg-faint); }
+#s5 .tv { font-size: 12px; font-weight: 600; color: var(--fg); }
+
+/* ══════════════════════════════════════════════════
+   SLIDE 6 — MARKET
+══════════════════════════════════════════════════ */
+#s6 { background: var(--bg); }
+#s6 .inner {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 960px; text-align: center;
+}
+#s6 .slide-title {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(17px, 2.2vw, 27px);
+  color: var(--fg-dim); margin-bottom: 36px; letter-spacing: -.01em;
+}
+#s6 .mkt-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 24px;
+}
+#s6 .mc {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 18px; padding: 26px 22px; text-align: left;
+}
+#s6 .mc.hl {
+  background: rgba(194,53,26,.05); border-color: rgba(194,53,26,.3);
+}
+#s6 .mc-tag { margin-bottom: 12px; }
+#s6 .mc-num {
+  font-size: clamp(34px, 5vw, 52px); font-weight: 300;
+  letter-spacing: -.04em; color: var(--fg); line-height: 1;
+  margin-bottom: 7px;
+}
+#s6 .mc.hl .mc-num { color: var(--red); }
+#s6 .mc-desc { font-size: 12.5px; color: var(--fg-dim); line-height: 1.45; }
+#s6 .beachhead {
+  background: var(--bg2); border: 1px solid var(--bord);
+  border-radius: 13px; padding: 16px 22px;
+  font-size: 13px; color: var(--fg-dim); line-height: 1.55;
+}
+#s6 .beachhead strong { color: var(--fg); font-weight: 600; }
+
+/* ══════════════════════════════════════════════════
+   SLIDE 7 — BUSINESS MODEL + ASK
+══════════════════════════════════════════════════ */
+#s7 {
+  background: var(--bg);
+  justify-content: flex-start;
+  padding: 44px 80px 52px;
+}
+#s7 .inner {
+  position: relative; z-index: 1;
+  width: 100%; display: flex;
+  flex-direction: column; gap: 16px; height: 100%;
+}
+#s7 .top { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-height: 0; }
+
+#s7 .price-card {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 18px; padding: 28px 24px;
+  display: flex; flex-direction: column;
+}
+#s7 .ask-card {
+  background: var(--bg3); border: 1px solid var(--bord);
+  border-radius: 18px; padding: 28px 24px;
+  display: flex; flex-direction: column;
+}
+#s7 .big-price {
+  font-size: clamp(38px, 5.5vw, 66px); font-weight: 300;
+  letter-spacing: -.05em; color: var(--red); line-height: 1;
+  margin-bottom: 3px;
+}
+#s7 .big-ask {
+  font-size: clamp(38px, 5.5vw, 66px); font-weight: 300;
+  letter-spacing: -.05em; color: var(--fg); line-height: 1;
+  margin-bottom: 3px;
+}
+#s7 .sub-mono {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--fg-faint); margin-bottom: 18px;
+}
+#s7 .payback {
+  font-size: 13px; color: var(--fg-dim); line-height: 1.6;
+  margin-top: auto; padding-top: 14px;
+  border-top: 1px solid var(--bord);
+}
+#s7 .payback strong { color: var(--fg); }
+#s7 .use-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-top: auto; }
+#s7 .use-list li {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 12.5px; color: var(--fg-dim); line-height: 1.45;
+}
+#s7 .use-list li::before {
+  content: ''; width: 4px; height: 4px; border-radius: 50%;
+  background: var(--red); margin-top: 6px; flex-shrink: 0;
+}
+
+#s7 .founders { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#s7 .fc {
+  background: var(--bg2); border: 1px solid var(--bord);
+  border-radius: 13px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 13px;
+}
+#s7 .fc img {
+  width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
+  border: 1px solid var(--bord-mid); background: var(--bg4); flex-shrink: 0;
+}
+#s7 .fc-name { font-size: 13.5px; font-weight: 600; color: var(--fg); }
+#s7 .fc-role {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--fg-faint); margin-top: 2px;
+}
+#s7 .fc-deg { font-size: 11.5px; color: var(--fg-faint); margin-top: 2px; }
+
+#s7 .closing {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(15px, 1.9vw, 21px);
+  color: var(--fg-dim); text-align: center; letter-spacing: -.01em;
+}
+</style>
+</head>
+<body>
+
+<div id="progress" style="width:14.3%"></div>
+<div id="counter">01 / 07</div>
+
+<div class="nav-btn gone" id="nav-prev" onclick="go(-1)">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</div>
+<div class="nav-btn" id="nav-next" onclick="go(1)">
+  <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+</div>
+
+<div id="deck">
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 1 · TITLE
+════════════════════════════════════════════════ -->
+<div class="slide active" id="s1">
+  <div class="grid-bg"></div>
+  <div class="inner">
+    <div class="logo-row">
+      <div class="lmark">
+        <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="13" cy="13" r="11" stroke="rgba(255,255,255,.45)" stroke-width="1.2"/>
+          <polyline points="2,13 7,13 9,7 12,19 15,9 17,13 24,13"
+            stroke="rgba(255,255,255,.8)" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="ltext">VITALSYNC</span>
+    </div>
+    <div class="tagline">AI-Powered Patient Monitoring Unit</div>
+    <div class="rule"></div>
+    <div class="foot">Yaqeen Health &nbsp;·&nbsp; Harvard HSIL 2026</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 2 · PROBLEM
+════════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+  <div class="inner">
+    <div class="bignum">72–99<sup>%</sup></div>
+    <div class="statlabel">of ICU alarms are false positives.</div>
+    <div class="statsub">Every single shift. In every hospital.</div>
+    <div class="attr">Across multiple peer-reviewed clinical studies &nbsp;·&nbsp; ICU Alarm Fatigue &nbsp;·&nbsp; 2020–2024</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 3 · DEMO
+════════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="grid-bg" style="opacity:.35"></div>
+  <div class="headline">This is VitalSync.</div>
+  <div class="dash-frame">
+    <img src="./image/Screenshot 2026-04-30 at 6.34.46 PM.png"
+         alt="VitalSync — real-time ICU deterioration monitoring dashboard"
+         onerror="this.parentElement.style.background='var(--bg2)';this.style.display='none'"/>
+  </div>
+  <div class="pills-row">
+    <div class="pill pill-live"><span class="dot-live"></span>Real-time AI</div>
+    <div class="pill">Fully offline</div>
+    <div class="pill">Running right now</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 4 · TRACTION
+════════════════════════════════════════════════ -->
+<div class="slide" id="s4">
+  <div class="grid-bg"></div>
+  <div class="inner">
+    <div class="place">1st Place</div>
+    <div class="hackname">Harvard HSIL 2026 Hackathon</div>
+    <div class="trac-grid">
+      <div class="tc">
+        <div class="tc-tag label-red">Venue</div>
+        <div class="tc-val">UCSI Hospital<br>Port Dickson · April 2026</div>
+      </div>
+      <div class="tc">
+        <div class="tc-tag label-red">Judging Panel</div>
+        <div class="tc-val">Included the Senior Director of UCSI Hospital's Healthcare Strategy Office — a practicing clinician</div>
+      </div>
+      <div class="tc">
+        <div class="tc-tag label-red">Outcome</div>
+        <div class="tc-val">Clinical endorsement on the spot · Expressed interest in a pilot collaboration</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 5 · SOLUTION
+════════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="inner">
+    <!-- LEFT: Stats -->
+    <div>
+      <div class="col-label label-mono">Under the hood</div>
+      <div class="stats-grid">
+        <div class="sc">
+          <div class="sc-num">0.805</div>
+          <div class="sc-lbl">AUC — comparable to Epic Deterioration Index</div>
+        </div>
+        <div class="sc">
+          <div class="sc-num">78K</div>
+          <div class="sc-lbl">ICU patients trained on (eICU dataset)</div>
+        </div>
+        <div class="sc">
+          <div class="sc-num">$249</div>
+          <div class="sc-lbl">Edge device — NVIDIA Jetson Orin Nano</div>
+        </div>
+        <div class="sc">
+          <div class="sc-num">42</div>
+          <div class="sc-lbl">Features · no EHR required</div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT: Comparison -->
+    <div>
+      <div class="col-label label-mono">vs. the alternative</div>
+      <div class="table">
+        <div class="th">
+          <span>Feature</span>
+          <span>Epic DI</span>
+          <span>VitalSync</span>
+        </div>
+        <div class="tr">
+          <div class="tf">EHR required</div>
+          <div class="te">Yes — Epic only</div>
+          <div class="tv">None needed</div>
+        </div>
+        <div class="tr">
+          <div class="tf">Cloud dependency</div>
+          <div class="te">Yes</div>
+          <div class="tv">Fully offline</div>
+        </div>
+        <div class="tr">
+          <div class="tf">AUC performance</div>
+          <div class="te">0.80–0.82</div>
+          <div class="tv">0.805</div>
+        </div>
+        <div class="tr">
+          <div class="tf">SE Asia access</div>
+          <div class="te">Effectively none</div>
+          <div class="tv">Built for it</div>
+        </div>
+        <div class="tr">
+          <div class="tf">Patient data</div>
+          <div class="te">Leaves facility</div>
+          <div class="tv">On-premise only</div>
+        </div>
+        <div class="tr">
+          <div class="tf">Hardware cost</div>
+          <div class="te">$5,000+ / bed</div>
+          <div class="tv">$249 total</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 6 · MARKET
+════════════════════════════════════════════════ -->
+<div class="slide" id="s6">
+  <div class="grid-bg"></div>
+  <div class="inner">
+    <div class="slide-title">The Asia-Pacific ICU monitoring market is $1.2 billion.</div>
+    <div class="mkt-grid">
+      <div class="mc">
+        <div class="mc-tag label-mono">TAM · Global</div>
+        <div class="mc-num">$18.9B</div>
+        <div class="mc-desc">Global AI-enabled medical devices — growing to $96.5B by 2030 at 38.5% CAGR</div>
+      </div>
+      <div class="mc">
+        <div class="mc-tag label-mono">SAM · Asia-Pacific</div>
+        <div class="mc-num">$1.2B</div>
+        <div class="mc-desc">ICU patient monitoring, Asia-Pacific (2025) — our operating geography</div>
+      </div>
+      <div class="mc hl">
+        <div class="mc-tag" style="font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--red);opacity:.75;margin-bottom:12px">SOM · Malaysia</div>
+        <div class="mc-num">$4.2M/yr</div>
+        <div class="mc-desc">Malaysia's private hospital ICUs — ~100 sites, 3–6 month sales cycles</div>
+      </div>
+    </div>
+    <div class="beachhead">
+      <strong>Beachhead:</strong> Malaysia's 100 private hospital ICUs &nbsp;·&nbsp;
+      <strong>5 paying hospitals by Year 3</strong> opens Southeast Asia &nbsp;·&nbsp;
+      3–6 month procurement cycles vs 9–18 months for government hospitals
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SLIDE 7 · BUSINESS MODEL + ASK
+════════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="grid-bg" style="opacity:.28"></div>
+  <div class="inner">
+
+    <div class="top">
+      <!-- Pricing -->
+      <div class="price-card">
+        <div class="label-mono" style="margin-bottom:14px">Business Model</div>
+        <div class="big-price">$560</div>
+        <div class="sub-mono">Per ward &nbsp;/&nbsp; per month</div>
+        <div class="payback">
+          Pays for itself if it prevents <strong>one unplanned ICU admission</strong> per month —
+          a Malaysian private hospital ICU admission costs <strong>$670–$1,340</strong> in bed costs alone.
+          License a ward. Prevent one escalation. Subscription covered.
+        </div>
+      </div>
+      <!-- Ask -->
+      <div class="ask-card">
+        <div class="label-mono" style="margin-bottom:14px">Pre-seed Ask</div>
+        <div class="big-ask">$115,000</div>
+        <div class="sub-mono">18-month runway</div>
+        <ul class="use-list">
+          <li>MDA regulatory groundwork — Class C SaMD registration, ISO 13485 QMS initiation</li>
+          <li>Clinical pilot at UCSI Hospital — IRB-approved research study, 30–50 patients</li>
+          <li>HL7 FHIR integration + independent security audit</li>
+          <li>$80,000 verified operational costs · $35,000 contingency for regulatory resubmissions</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Founders -->
+    <div class="founders">
+      <div class="fc">
+        <img src="./image/pfp/abder.png" alt="Abderrahman"
+             onerror="this.style.display='none'"/>
+        <div>
+          <div class="fc-name">Abderrahman Nabeel Al-Qirim</div>
+          <div class="fc-role">Co-founder · CTO</div>
+          <div class="fc-deg">BSc Medical Informatics, RUMC · Built the ML pipeline &amp; backend</div>
+        </div>
+      </div>
+      <div class="fc">
+        <img src="./image/pfp/n.png" alt="Hamizan Naeem"
+             onerror="this.style.display='none'"/>
+        <div>
+          <div class="fc-name">Hamizan Naeem Bin Hazlan</div>
+          <div class="fc-role">Co-founder · CEO</div>
+          <div class="fc-deg">BSc Medical Informatics, RUMC · Commercial strategy &amp; clinical relationships</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="closing">"The next milestone is running inside a real ICU."</div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<script>
+(function () {
+  const TOTAL = 7;
+  let cur = 1;
+
+  const slides  = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const bar     = document.getElementById('progress');
+  const prev    = document.getElementById('nav-prev');
+  const next    = document.getElementById('nav-next');
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  function go(dir) {
+    const nxt = cur + dir;
+    if (nxt < 1 || nxt > TOTAL) return;
+
+    slides[cur - 1].classList.remove('active');
+    slides[cur - 1].classList.add('exit');
+    setTimeout(() => slides[cur - 1].classList.remove('exit'), 280);
+
+    cur = nxt;
+    slides[cur - 1].classList.add('active');
+
+    counter.textContent = pad(cur) + ' / ' + pad(TOTAL);
+    bar.style.width = ((cur / TOTAL) * 100) + '%';
+    prev.classList.toggle('gone', cur === 1);
+    next.classList.toggle('gone', cur === TOTAL);
+  }
+
+  window.go = go;
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ')  { e.preventDefault(); go(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')                 { e.preventDefault(); go(-1); }
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 48) go(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
